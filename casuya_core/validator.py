@@ -49,6 +49,7 @@ class LessonValidator:
         errors = []
         if not html_path.exists():
             errors.append(f"HTML file not found: {html_path}")
+            return errors
         with open(html_path, "r", encoding="utf-8") as f:
             html = f.read()
             html_errors = self.validate_html(html)

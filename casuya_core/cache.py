@@ -26,10 +26,12 @@ class BuildCache:
         cache_file.write_bytes(data)
 
     def invalidate(self, file_path: Path) -> None:
+        content_hash = calculate_file_hash(file_path)
         for f in self.cache_dir.iterdir():
-            cache_key = hashlib.sha256(f.name.encode()).hexdigest()
-            _ = cache_key
+            if f.name.startswith(content_hash):
+                f.unlink()
 
     def clear(self) -> None:
         for f in self.cache_dir.iterdir():
-            f.unlink()
+            if f.is_file():
+                f.unlink()

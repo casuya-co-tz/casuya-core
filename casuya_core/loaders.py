@@ -29,7 +29,12 @@ class PackageLoader:
         pkg_path = Path(pkg_path)
         output_dir = Path(output_dir)
         with zipfile.ZipFile(pkg_path, "r") as zf:
-            zf.extractall(output_dir)
+            for member in zf.infolist():
+                member_path = Path(member.filename)
+                resolved = (output_dir / member_path).resolve()
+                if not str(resolved).startswith(str(output_dir.resolve())):
+                    raise CasuyaError(f"ZipSlip detected: {member.filename}")
+                zf.extract(member, output_dir)
         return output_dir
 
     def get_manifest(self, pkg_path: Path) -> Optional[Dict[str, Any]]:

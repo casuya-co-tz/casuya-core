@@ -36,10 +36,11 @@ class SecurityValidator:
     def validate_package_paths(self, base_dir: Union[Path, str]) -> List[str]:
         base_dir = Path(base_dir)
         errors = []
+        base_dir_resolved = base_dir.resolve()
         for f in base_dir.rglob("*"):
             if f.is_file():
                 try:
-                    f.relative_to(base_dir)
+                    f.resolve().relative_to(base_dir_resolved)
                 except ValueError:
                     errors.append(f"Path traversal detected: {f}")
         return errors

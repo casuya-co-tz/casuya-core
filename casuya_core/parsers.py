@@ -71,7 +71,7 @@ class CSSParser:
 
 class JSParser:
     def extract_functions(self, js: str) -> List[str]:
-        return re.findall(r'(?:function\s+(\w+)|(\w+)\s*=\s*function)', js)
+        return [name or alias for name, alias in re.findall(r'(?:function\s+(\w+)|(\w+)\s*=\s*function)', js)]
 
     def extract_imports(self, js: str) -> List[str]:
         imports = re.findall(r'(?:import|require)\s*\(?\s*["\']([^"\']+)["\']', js)
